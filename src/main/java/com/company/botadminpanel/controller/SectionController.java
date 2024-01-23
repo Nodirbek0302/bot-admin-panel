@@ -1,0 +1,49 @@
+package com.company.botadminpanel.controller;
+
+import com.company.botadminpanel.dto.AddSectionDTO;
+import com.company.botadminpanel.dto.ApiResult;
+import com.company.botadminpanel.model.Section;
+import com.company.botadminpanel.service.section.SectionService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/section")
+@RequiredArgsConstructor
+public class SectionController {
+
+    private final SectionService sectionService;
+
+    @GetMapping
+    public HttpEntity<ApiResult<List<Section>>> sectionList(){
+        return ResponseEntity.ok(sectionService.list());
+    }
+
+    @GetMapping("/{id}")
+    public HttpEntity<ApiResult<Section>> getById(@PathVariable Integer id){
+        return ResponseEntity.ok(sectionService.getById(id));
+    }
+
+    @PostMapping("/add")
+    public HttpEntity<ApiResult<Boolean>> add(@Valid @RequestBody AddSectionDTO addSectionDTO){
+        return ResponseEntity.ok(sectionService.add(addSectionDTO));
+    }
+
+    @PutMapping("/update")
+    public HttpEntity<ApiResult<Boolean>> update(@RequestParam Integer id,@Valid @RequestBody AddSectionDTO addSectionDTO){
+        return ResponseEntity.ok(sectionService.update(id,addSectionDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public HttpEntity<ApiResult<Boolean>> delete(@PathVariable Integer id){
+        return ResponseEntity.ok(sectionService.delete(id));
+    }
+
+}
