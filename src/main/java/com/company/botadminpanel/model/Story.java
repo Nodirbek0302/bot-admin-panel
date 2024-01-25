@@ -1,23 +1,27 @@
 package com.company.botadminpanel.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.mapping.List;
 
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 public class Story {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+    @Column(nullable = false)
     String body;
     String score;
-    Double price;
-    Integer sectionId;
+    @ManyToOne
+    Section section;
+    @ManyToOne
+    User user;
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.*;
+
 @Builder
 @Getter
 @Setter
@@ -20,4 +22,6 @@ public class Section {
     String name;
     @ManyToOne
     Book book;
+    @OneToMany(mappedBy = "section",cascade = CascadeType.ALL)
+    List<Story> stories;
 }
