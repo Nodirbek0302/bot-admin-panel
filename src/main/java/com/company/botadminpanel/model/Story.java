@@ -17,7 +17,6 @@ public class Story {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(nullable = false)
     String body;
     String score;
     @ManyToOne

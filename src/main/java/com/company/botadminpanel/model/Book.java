@@ -13,14 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"author","title"}))
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(nullable = false)
-    String author;
-    @Column(nullable = false)
+    @Column(unique = true)
     String title;
     Boolean isActive;
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)

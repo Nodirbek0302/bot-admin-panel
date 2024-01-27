@@ -15,9 +15,7 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(nullable = false)
     Integer questionId;
-    @Column(nullable = false)
     String name;
     Boolean correct;
 }

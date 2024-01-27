@@ -22,17 +22,13 @@ public class Admin implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(nullable = false)
     String firstName;
-    @Column(nullable = false)
     String lastName;
     String phoneNumber;
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     String username;
-    @Column(nullable = false)
     String password;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     RoleEnum roleEnum;
 
     @Override

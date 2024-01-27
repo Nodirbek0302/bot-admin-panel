@@ -32,11 +32,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public ApiResult<Boolean> add(AddBookDTO addBookDTO) {
 
-        Optional<Book> book = bookRepository.findByAuthorAndTitle(addBookDTO.getAuthor(), addBookDTO.getTitle());
+        Optional<Book> book = bookRepository.findByTitle(addBookDTO.getTitle()+"("+addBookDTO.getAuthor()+")");
         if (book.isPresent())
             throw RestException.restThrow("Bunday kitob oldin qo'shilgan",HttpStatus.BAD_REQUEST);
 
-        Book book1 = Book.builder().isActive(true).author(addBookDTO.getAuthor()).title(addBookDTO.getTitle()).build();
+        Book book1 = Book.builder().isActive(true).title(addBookDTO.getTitle()+"("+addBookDTO.getAuthor()+")").build();
         bookRepository.save(book1);
 
         return ApiResult.successResponse(true);
@@ -46,9 +46,7 @@ public class BookServiceImpl implements BookService {
     public ApiResult<Boolean> update(Integer id, AddBookDTO addBookDTO) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> RestException.restThrow("Bunday kitob mavjud emas", HttpStatus.BAD_REQUEST));
-
-        book.setAuthor(addBookDTO.getAuthor());
-        book.setTitle(addBookDTO.getTitle());
+        book.setTitle(addBookDTO.getTitle()+"("+addBookDTO.getAuthor()+")");
         bookRepository.save(book);
 
         return ApiResult.successResponse(true);

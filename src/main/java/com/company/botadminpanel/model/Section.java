@@ -18,7 +18,6 @@ public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(nullable = false)
     String name;
     @ManyToOne
     Book book;

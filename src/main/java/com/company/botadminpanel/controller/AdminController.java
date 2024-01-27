@@ -26,6 +26,7 @@ public class AdminController {
       return ResponseEntity.ok(ApiResult.successResponse(adminService.add(addAdminDTO)));
     }
 
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping("/list")
     public HttpEntity<ApiResult<List<Admin>>> list(){
         return ResponseEntity.ok(adminService.list());

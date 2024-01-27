@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 public class HistoryItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer historyId;
+    Integer id;
     Integer questionId;
     Integer answerId;
     String question;
