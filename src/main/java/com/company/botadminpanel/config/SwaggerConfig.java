@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
                                         value = "Value extension")})}
                 )),
         servers = {
-                @Server(url = "http://localhost:8080", description = "Localhost"),
+                @Server(url = "https://bot-admin-panel.onrender.com/", description = "bot-server"),
         },
         security = {
                 @SecurityRequirement(name = "bearerAuth"),
