@@ -42,8 +42,8 @@ public class BookController {
 
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PutMapping("/update")
-    public HttpEntity<ApiResult<Boolean>> update(@RequestParam Integer id, @Valid @RequestBody AddBookDTO addBookDTO){
+    @PutMapping("/update/{id}")
+    public HttpEntity<ApiResult<Boolean>> update(@Valid @RequestBody AddBookDTO addBookDTO, @PathVariable Integer id){
         return ResponseEntity.ok(bookService.update(id,addBookDTO));
     }
 
