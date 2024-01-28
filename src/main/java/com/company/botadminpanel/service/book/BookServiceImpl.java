@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public ApiResult<Boolean> deleteIsActive(Integer id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> RestException.restThrow("Bunday book mavjud emas", HttpStatus.BAD_REQUEST));
-        book.setIsActive(false);
+        book.setIsActive(!book.getIsActive());
         bookRepository.save(book);
         return ApiResult.successResponse(true);
     }
