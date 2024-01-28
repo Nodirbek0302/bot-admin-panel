@@ -18,7 +18,7 @@ public class QuestionHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @OneToMany
+    @OneToMany(mappedBy = "questionHistory",cascade = CascadeType.ALL)
     List<HistoryItem> answers;
     String userId;
     String bookId;
