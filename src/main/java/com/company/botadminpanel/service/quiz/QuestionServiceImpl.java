@@ -55,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         for (AnswerDTO answerDTO : dtos) {
             Answer answer = Answer.builder()
-                    .questionId(question.getId())
+                    .question(question)
                     .correct(answerDTO.getCorrect())
                     .name(answerDTO.getName())
                     .build();

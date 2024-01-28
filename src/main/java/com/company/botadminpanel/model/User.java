@@ -17,8 +17,6 @@ import java.util.*;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
     String chatId;
     String firstName;
     String lastName;
@@ -28,7 +26,7 @@ public class User {
     String school;
     Integer classNumber;
     @Enumerated(EnumType.STRING)
-    StepEnum step;
+    StepEnum stepEnum;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     List<Story> storyList;
 }

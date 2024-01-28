@@ -37,7 +37,7 @@ public class AnswerServiceImpl implements AnswerService {
 
         Answer answer = Answer.builder()
                 .name(updateAnswerDTO.getName())
-                .questionId(question.getId())
+                .question(question)
                 .correct(updateAnswerDTO.getCorrect()).build();
 
         return ApiResult.successResponse(answerRepository.save(answer));
@@ -52,7 +52,7 @@ public class AnswerServiceImpl implements AnswerService {
 
 
         answer.setName(updateAnswerDTO.getName());
-        answer.setQuestionId(question.getId());
+        answer.setQuestion(question);
         answer.setCorrect(updateAnswerDTO.getCorrect());
         answerRepository.save(answer);
 

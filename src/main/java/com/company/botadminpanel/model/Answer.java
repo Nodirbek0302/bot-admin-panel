@@ -15,7 +15,8 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    Integer questionId;
+    @ManyToOne
+    Question question;
     String name;
     Boolean correct;
 }

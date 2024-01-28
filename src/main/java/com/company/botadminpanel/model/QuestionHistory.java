@@ -20,7 +20,7 @@ public class QuestionHistory {
     Integer id;
     @OneToMany
     List<HistoryItem> answers;
-    Integer userId;
+    String userId;
     String bookId;
     Integer numberOfQuestion;
     Integer correctAnswer;

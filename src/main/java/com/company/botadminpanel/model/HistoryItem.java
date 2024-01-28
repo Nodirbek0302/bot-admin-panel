@@ -18,6 +18,7 @@ public class HistoryItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+    String userId;
     Integer questionId;
     Integer answerId;
     String question;

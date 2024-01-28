@@ -3,6 +3,7 @@ package com.company.botadminpanel.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import java.util.List;
 
 
 @Getter
@@ -20,4 +21,6 @@ public class Question {
     Book book;
     Double price;
     String name;
+    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL)
+    List<Answer> answerList;
 }
