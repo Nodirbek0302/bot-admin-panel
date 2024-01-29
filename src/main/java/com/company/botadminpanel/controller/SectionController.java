@@ -2,6 +2,7 @@ package com.company.botadminpanel.controller;
 
 import com.company.botadminpanel.dto.AddSectionDTO;
 import com.company.botadminpanel.dto.ApiResult;
+import com.company.botadminpanel.dto.SectionDTO;
 import com.company.botadminpanel.model.Section;
 import com.company.botadminpanel.service.section.SectionService;
 import jakarta.validation.Valid;
@@ -23,13 +24,13 @@ public class SectionController {
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping
-    public HttpEntity<ApiResult<List<Section>>> sectionList(){
+    public HttpEntity<ApiResult<List<SectionDTO>>> sectionList(){
         return ResponseEntity.ok(sectionService.list());
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping("/{id}")
-    public HttpEntity<ApiResult<Section>> getById(@PathVariable Integer id){
+    public HttpEntity<ApiResult<SectionDTO>> getById(@PathVariable Integer id){
         return ResponseEntity.ok(sectionService.getById(id));
     }
 
@@ -51,6 +52,11 @@ public class SectionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public HttpEntity<ApiResult<Boolean>> delete(@PathVariable Integer id){
         return ResponseEntity.ok(sectionService.delete(id));
+    }
+
+    @GetMapping("/by-book-id/{id}")
+    public HttpEntity<ApiResult<List<SectionDTO>>> byBookId(@PathVariable Integer id){
+        return ResponseEntity.ok(sectionService.byBookId(id));
     }
 
 }

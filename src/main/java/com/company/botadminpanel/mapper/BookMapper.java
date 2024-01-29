@@ -10,5 +10,6 @@ import org.mapstruct.Mapper;
 public interface BookMapper {
 
      BookDTO mapToBookDTO(Book book);
+     Book ToMapBook(BookDTO bookDTO);
 
 }

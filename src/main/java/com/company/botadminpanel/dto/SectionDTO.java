@@ -17,5 +17,5 @@ public class SectionDTO {
     @NotBlank
     String name;
     @NotNull
-    BookDTO bookDTO;
+    BookDTO book;
 }

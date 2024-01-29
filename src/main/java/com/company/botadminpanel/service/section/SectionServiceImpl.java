@@ -2,11 +2,14 @@ package com.company.botadminpanel.service.section;
 
 import com.company.botadminpanel.dto.AddSectionDTO;
 import com.company.botadminpanel.dto.ApiResult;
+import com.company.botadminpanel.dto.SectionDTO;
 import com.company.botadminpanel.exceptions.RestException;
 import com.company.botadminpanel.model.Book;
 import com.company.botadminpanel.model.Section;
 import com.company.botadminpanel.repository.SectionRepository;
 import com.company.botadminpanel.service.book.BookService;
+import com.company.botadminpanel.service.story.StoryService;
+import com.company.botadminpanel.service.story.StoryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,18 @@ public class SectionServiceImpl implements SectionService {
 
     private final SectionRepository sectionRepository;
     private final BookService bookService;
+    private final StoryServiceImpl storyService;
 
     @Override
-    public ApiResult<List<Section>> list() {
-        return ApiResult.successResponse(sectionRepository.findAll());
+    public ApiResult<List<SectionDTO>> list() {
+        List<Section> all = sectionRepository.findAll();
+        return ApiResult.successResponse(all.stream().map(storyService::mapToSectionDTO).toList());
     }
 
     @Override
-    public ApiResult<Section> getById(Integer id) {
-        return ApiResult.successResponse(sectionRepository.findById(id)
-                .orElseThrow(() -> RestException.restThrow("Bunday Section mavjud emas", HttpStatus.BAD_REQUEST)));
+    public ApiResult<SectionDTO> getById(Integer id) {
+        return ApiResult.successResponse(storyService.mapToSectionDTO(sectionRepository.findById(id)
+                .orElseThrow(() -> RestException.restThrow("Bunday Section mavjud emas", HttpStatus.BAD_REQUEST))));
     }
 
     @Override
@@ -61,8 +66,16 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    public ApiResult<List<SectionDTO>> byBookId(Integer id) {
+        List<Section> byBookId = sectionRepository.findByBook_Id(id);
+
+        return ApiResult.successResponse(byBookId.stream().map(storyService::mapToSectionDTO).toList());
+    }
+
+    @Override
     public ApiResult<Boolean> delete(Integer id) {
         sectionRepository.deleteById(id);
         return ApiResult.successResponse(true);
     }
+
 }

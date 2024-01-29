@@ -19,7 +19,7 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String name;
-    @ManyToOne(fetch =FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     Book book;
     @OneToMany(mappedBy = "section",cascade = CascadeType.ALL)
     List<Story> stories;

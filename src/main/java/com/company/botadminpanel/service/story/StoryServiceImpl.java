@@ -13,7 +13,7 @@ import com.company.botadminpanel.model.User;
 import com.company.botadminpanel.repository.StoryRepository;
 import com.company.botadminpanel.repository.UserRepository;
 import com.company.botadminpanel.service.section.SectionService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StoryServiceImpl implements StoryService {
 
     private final StoryRepository storyRepository;
     private final UserMapper userMapper;
     private final BookMapper bookMapper;
+
+    public StoryServiceImpl(StoryRepository storyRepository, UserMapper userMapper, BookMapper bookMapper, @Lazy SectionService sectionService, UserRepository userRepository) {
+        this.storyRepository = storyRepository;
+        this.userMapper = userMapper;
+        this.bookMapper = bookMapper;
+        this.sectionService = sectionService;
+        this.userRepository = userRepository;
+    }
+
     private final SectionService sectionService;
     private final UserRepository userRepository;
 
@@ -49,7 +57,7 @@ public class StoryServiceImpl implements StoryService {
         Story story = storyRepository.findById(id)
                 .orElseThrow(() -> RestException.restThrow("Bunday story mavjud emas id = " + id, HttpStatus.BAD_REQUEST));
 
-        Section section = sectionService.getById(storyDTO.getSectionId()).getData();
+        SectionDTO section = sectionService.getById(storyDTO.getSectionId()).getData();
 
         User user = userRepository.findById(storyDTO.getUserId())
                 .orElseThrow(() -> RestException.restThrow("Bunday User mavjud emas id => " + storyDTO.getUserId(), HttpStatus.BAD_REQUEST));
@@ -57,7 +65,11 @@ public class StoryServiceImpl implements StoryService {
         story.setBody(storyDTO.getBody());
         story.setUser(user);
         story.setScore(storyDTO.getScore());
-        story.setSection(section);
+        story.setSection(Section.builder()
+                .id(section.getId())
+                .name(section.getName())
+                .book(bookMapper.ToMapBook(section.getBook()))
+                .build());
 
         storyRepository.save(story);
 
@@ -95,11 +107,11 @@ public class StoryServiceImpl implements StoryService {
                 .build();
     }
 
-    private SectionDTO mapToSectionDTO(Section section) {
+    public SectionDTO mapToSectionDTO(Section section) {
         return SectionDTO.builder()
                 .id(section.getId())
                 .name(section.getName())
-                .bookDTO(bookMapper.mapToBookDTO(section.getBook()))
+                .book(bookMapper.mapToBookDTO(section.getBook()))
                 .build();
     }
 }
