@@ -16,4 +16,8 @@ public interface StoryService {
     ApiResult<StoryDTO> update(Integer id, UpdateStoryDTO storyDTO);
 
     void delete(Integer id);
+
+    ApiResult<Boolean> score(Integer score, Integer id);
+
+    ApiResult<Boolean> unscore(Integer id);
 }

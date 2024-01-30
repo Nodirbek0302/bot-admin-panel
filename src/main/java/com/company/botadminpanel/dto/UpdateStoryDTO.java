@@ -20,5 +20,5 @@ public class UpdateStoryDTO {
     @NotNull
     Integer sectionId;
     @NotNull
-    Integer userId;
+    String userId;
 }

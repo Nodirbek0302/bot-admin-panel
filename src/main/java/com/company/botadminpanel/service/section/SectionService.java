@@ -13,9 +13,9 @@ public interface SectionService {
 
     ApiResult<SectionDTO> getById(Integer id);
 
-    ApiResult<Boolean> add(AddSectionDTO addSectionDTO);
+    ApiResult<SectionDTO> add(AddSectionDTO addSectionDTO);
 
-    ApiResult<Boolean> update(Integer id, AddSectionDTO addSectionDTO);
+    ApiResult<SectionDTO> update(Integer id, AddSectionDTO addSectionDTO);
 
     ApiResult<Boolean> delete(Integer id);
 

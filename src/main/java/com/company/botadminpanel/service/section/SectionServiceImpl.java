@@ -4,8 +4,10 @@ import com.company.botadminpanel.dto.AddSectionDTO;
 import com.company.botadminpanel.dto.ApiResult;
 import com.company.botadminpanel.dto.SectionDTO;
 import com.company.botadminpanel.exceptions.RestException;
+import com.company.botadminpanel.mapper.SectionMapper;
 import com.company.botadminpanel.model.Book;
 import com.company.botadminpanel.model.Section;
+import com.company.botadminpanel.repository.BookRepository;
 import com.company.botadminpanel.repository.SectionRepository;
 import com.company.botadminpanel.service.book.BookService;
 import com.company.botadminpanel.service.story.StoryService;
@@ -24,6 +26,8 @@ public class SectionServiceImpl implements SectionService {
     private final SectionRepository sectionRepository;
     private final BookService bookService;
     private final StoryServiceImpl storyService;
+    private final SectionMapper sectionMapper;
+    private final BookRepository bookRepository;
 
     @Override
     public ApiResult<List<SectionDTO>> list() {
@@ -38,31 +42,35 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public ApiResult<Boolean> add(AddSectionDTO addSectionDTO) {
+    public ApiResult<SectionDTO> add(AddSectionDTO addSectionDTO) {
         Optional<Section> byNameAndBookId = sectionRepository.findByNameAndBook_Id(addSectionDTO.getName(), addSectionDTO.getBookId());
 
         if (byNameAndBookId.isPresent())
             throw RestException.restThrow("Bunday Section mavjud",HttpStatus.BAD_REQUEST);
 
+        Book book = bookRepository.findById(addSectionDTO.getBookId()).orElseThrow();
+
         Section section = Section.builder()
                 .name(addSectionDTO.getName())
-                .book(bookService.getById(addSectionDTO.getBookId()).getData())
+                .book(book)
                 .build();
         sectionRepository.save(section);
 
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(sectionMapper.mapToBookDTO(section));
     }
 
     @Override
-    public ApiResult<Boolean> update(Integer id, AddSectionDTO addSectionDTO) {
+    public ApiResult<SectionDTO> update(Integer id, AddSectionDTO addSectionDTO) {
         Section section = sectionRepository.findById(id)
                 .orElseThrow(() -> RestException.restThrow("Bunday section mavjud emas", HttpStatus.BAD_REQUEST));
 
+        Book book = bookRepository.findById(addSectionDTO.getBookId()).orElseThrow();
+
         section.setName(addSectionDTO.getName());
-        section.setBook(bookService.getById(addSectionDTO.getBookId()).getData());
+        section.setBook(book);
         sectionRepository.save(section);
 
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(sectionMapper.mapToBookDTO(section));
     }
 
     @Override

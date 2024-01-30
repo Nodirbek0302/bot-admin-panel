@@ -24,38 +24,37 @@ public class SectionController {
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping
-    public HttpEntity<ApiResult<List<SectionDTO>>> sectionList(){
+    public HttpEntity<ApiResult<List<SectionDTO>>> sectionList() {
         return ResponseEntity.ok(sectionService.list());
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping("/{id}")
-    public HttpEntity<ApiResult<SectionDTO>> getById(@PathVariable Integer id){
+    public HttpEntity<ApiResult<SectionDTO>> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(sectionService.getById(id));
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PostMapping("/add")
-    public HttpEntity<ApiResult<Boolean>> add(@Valid @RequestBody AddSectionDTO addSectionDTO){
+    @PostMapping
+    public HttpEntity<ApiResult<SectionDTO>> add(@Valid @RequestBody AddSectionDTO addSectionDTO) {
         return ResponseEntity.ok(sectionService.add(addSectionDTO));
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PutMapping("/update")
-    public HttpEntity<ApiResult<Boolean>> update(@RequestParam Integer id,@Valid @RequestBody AddSectionDTO addSectionDTO){
-        return ResponseEntity.ok(sectionService.update(id,addSectionDTO));
+    @PutMapping("/{id}")
+    public HttpEntity<ApiResult<SectionDTO>> update(@PathVariable Integer id, @Valid @RequestBody AddSectionDTO addSectionDTO) {
+        return ResponseEntity.ok(sectionService.update(id, addSectionDTO));
     }
-
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public HttpEntity<ApiResult<Boolean>> delete(@PathVariable Integer id){
+    public HttpEntity<ApiResult<Boolean>> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(sectionService.delete(id));
     }
 
     @GetMapping("/by-book-id/{id}")
-    public HttpEntity<ApiResult<List<SectionDTO>>> byBookId(@PathVariable Integer id){
+    public HttpEntity<ApiResult<List<SectionDTO>>> byBookId(@PathVariable Integer id) {
         return ResponseEntity.ok(sectionService.byBookId(id));
     }
 

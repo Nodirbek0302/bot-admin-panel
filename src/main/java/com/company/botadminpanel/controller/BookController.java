@@ -2,6 +2,7 @@ package com.company.botadminpanel.controller;
 
 import com.company.botadminpanel.dto.AddBookDTO;
 import com.company.botadminpanel.dto.ApiResult;
+import com.company.botadminpanel.dto.BookDTO;
 import com.company.botadminpanel.model.Book;
 import com.company.botadminpanel.service.book.BookService;
 import jakarta.validation.Valid;
@@ -23,27 +24,27 @@ public class BookController {
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping
-    public HttpEntity<ApiResult<List<Book>>> list(){
+    public HttpEntity<ApiResult<List<BookDTO>>> list(){
         return ResponseEntity.ok(bookService.list());
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @GetMapping("/{id}")
-    public HttpEntity<ApiResult<Book>> getBook(@PathVariable Integer id){
+    public HttpEntity<ApiResult<BookDTO>> getBook(@PathVariable Integer id){
         return ResponseEntity.ok(bookService.getById(id));
     }
 
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PostMapping("/add")
-    public HttpEntity<ApiResult<Boolean>> add(@Valid @RequestBody AddBookDTO addBookDTO){
+    @PostMapping
+    public HttpEntity<ApiResult<BookDTO>> add(@Valid @RequestBody AddBookDTO addBookDTO){
         return ResponseEntity.ok(bookService.add(addBookDTO));
     }
 
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PutMapping("/update/{id}")
-    public HttpEntity<ApiResult<Boolean>> update(@Valid @RequestBody AddBookDTO addBookDTO, @PathVariable Integer id){
+    @PutMapping("/{id}")
+    public HttpEntity<ApiResult<BookDTO>> update(@Valid @RequestBody AddBookDTO addBookDTO, @PathVariable Integer id){
         return ResponseEntity.ok(bookService.update(id,addBookDTO));
     }
 
@@ -57,8 +58,8 @@ public class BookController {
 
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PatchMapping("/isActive/{id}")
-    public HttpEntity<ApiResult<Boolean>> deleteIsActive(@PathVariable Integer id){
+    @PatchMapping("/change-activity/{id}")
+    public HttpEntity<ApiResult<BookDTO>> deleteIsActive(@PathVariable Integer id){
         return ResponseEntity.ok(bookService.deleteIsActive(id));
     }
 }

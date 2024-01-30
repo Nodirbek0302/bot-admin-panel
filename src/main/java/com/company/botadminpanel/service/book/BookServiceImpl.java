@@ -2,38 +2,38 @@ package com.company.botadminpanel.service.book;
 
 import com.company.botadminpanel.dto.AddBookDTO;
 import com.company.botadminpanel.dto.ApiResult;
+import com.company.botadminpanel.dto.BookDTO;
 import com.company.botadminpanel.exceptions.RestException;
+import com.company.botadminpanel.mapper.BookMapper;
 import com.company.botadminpanel.model.Book;
 import com.company.botadminpanel.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Math.log;
-
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
-    public ApiResult<List<Book>> list() {
-        return ApiResult.successResponse(bookRepository.findAll());
+    public ApiResult<List<BookDTO>> list() {
+        return ApiResult.successResponse(bookMapper.mapToBookDTOList(bookRepository.findAllOrderById()));
     }
 
     @Override
-    public ApiResult<Book> getById(Integer id) {
-        return ApiResult.successResponse(bookRepository.findById(id)
-                .orElseThrow(() -> RestException.restThrow("Bunday kitob mavjud emas", HttpStatus.BAD_REQUEST)));
+    public ApiResult<BookDTO> getById(Integer id) {
+        return ApiResult.successResponse(bookMapper.mapToBookDTO(bookRepository.findById(id)
+                .orElseThrow(() -> RestException.restThrow("Bunday kitob mavjud emas", HttpStatus.BAD_REQUEST))));
     }
 
     @Override
-    public ApiResult<Boolean> add(AddBookDTO addBookDTO) {
+    public ApiResult<BookDTO> add(AddBookDTO addBookDTO) {
 
         Optional<Book> book = bookRepository.findByTitle(addBookDTO.getTitle()+"("+addBookDTO.getAuthor()+")");
         if (book.isPresent())
@@ -42,17 +42,16 @@ public class BookServiceImpl implements BookService {
         Book book1 = Book.builder().isActive(true).title(addBookDTO.getTitle()+"("+addBookDTO.getAuthor()+")").build();
         bookRepository.save(book1);
 
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(bookMapper.mapToBookDTO(book1));
     }
 
     @Override
-    public ApiResult<Boolean> update(Integer id, AddBookDTO addBookDTO) {
+    public ApiResult<BookDTO> update(Integer id, AddBookDTO addBookDTO) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> RestException.restThrow("Bunday kitob mavjud emas", HttpStatus.BAD_REQUEST));
         book.setTitle(addBookDTO.getTitle()+"("+addBookDTO.getAuthor()+")");
-        bookRepository.save(book);
 
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(bookMapper.mapToBookDTO(bookRepository.save(book)));
     }
 
     @Override
@@ -62,10 +61,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public ApiResult<Boolean> deleteIsActive(Integer id) {
+    public ApiResult<BookDTO> deleteIsActive(Integer id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> RestException.restThrow("Bunday book mavjud emas", HttpStatus.BAD_REQUEST));
         book.setIsActive(!book.getIsActive());
         bookRepository.save(book);
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(bookMapper.mapToBookDTO(book));
     }
 }

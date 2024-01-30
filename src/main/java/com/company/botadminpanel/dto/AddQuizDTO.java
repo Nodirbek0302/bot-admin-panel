@@ -21,5 +21,5 @@ public class AddQuizDTO {
     @NotNull
     Double price;
     @NotNull
-    List<AnswerDTO> answerDTOList;
+    List<AnswerDTO> answerList;
 }

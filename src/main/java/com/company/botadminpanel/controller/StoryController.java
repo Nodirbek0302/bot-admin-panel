@@ -22,12 +22,29 @@ public class StoryController {
 
     private final StoryService storyService;
 
+    /**
+     * This method is for get all stories by custom sort
+     * @param read
+     * @param sort
+     * @param sortType
+     * @return
+     */
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
     @PostMapping
     public HttpEntity<ApiResult<List<StoryDTO>>> list(@RequestParam boolean read,
                                                       @RequestParam(defaultValue = "score") String sort,
-                                                      @RequestParam(defaultValue = "ASC") Sort.Direction sortType){
+                                                      @RequestParam(defaultValue = "DESC") Sort.Direction sortType){
         return ResponseEntity.ok(storyService.list(read,sort,sortType));
+    }
+
+    @PutMapping("/{id}")
+    public HttpEntity<ApiResult<Boolean>> score(@RequestParam Integer score, @PathVariable Integer id) {
+        return ResponseEntity.accepted().body(storyService.score(score, id));
+    }
+
+    @PutMapping("/unscored/{id}")
+    public HttpEntity<ApiResult<Boolean>> score(@PathVariable Integer id) {
+        return ResponseEntity.accepted().body(storyService.unscore(id));
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
@@ -37,7 +54,7 @@ public class StoryController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN','SUPER_ADMIN')")
-    @PutMapping("/update")
+    @PutMapping
     public HttpEntity<ApiResult<StoryDTO>> update(@RequestParam Integer id, @Valid @RequestBody UpdateStoryDTO storyDTO){
         return ResponseEntity.ok(storyService.update(id,storyDTO));
     }

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BookDTO {
     Integer id;
-    String author;
     String title;
     Boolean isActive;
 }

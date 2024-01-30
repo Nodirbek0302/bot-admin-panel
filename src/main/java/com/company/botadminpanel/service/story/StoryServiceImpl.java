@@ -82,6 +82,22 @@ public class StoryServiceImpl implements StoryService {
         storyRepository.deleteById(id);
     }
 
+    @Override
+    public ApiResult<Boolean> score(Integer score, Integer id) {
+        Story story = storyRepository.findById(id).orElseThrow();
+        story.setScore(score.toString());
+        storyRepository.save(story);
+        return ApiResult.successResponse(true);
+    }
+
+    @Override
+    public ApiResult<Boolean> unscore(Integer id) {
+        Story story = storyRepository.findById(id).orElseThrow();
+        story.setScore(null);
+        storyRepository.save(story);
+        return ApiResult.successResponse(true);
+    }
+
     private List<StoryDTO> mapToStoryDTO(List<Story> all) {
         List<StoryDTO> list = new ArrayList<>();
         for (Story story : all) {

@@ -1,14 +1,13 @@
 package com.company.botadminpanel.service.quiz;
 
-import com.company.botadminpanel.dto.AddQuizDTO;
-import com.company.botadminpanel.dto.AnswerDTO;
-import com.company.botadminpanel.dto.ApiResult;
-import com.company.botadminpanel.dto.UpdateAnswerDTO;
+import com.company.botadminpanel.dto.*;
 import com.company.botadminpanel.exceptions.RestException;
+import com.company.botadminpanel.mapper.QuizMapper;
 import com.company.botadminpanel.model.Answer;
 import com.company.botadminpanel.model.Book;
 import com.company.botadminpanel.model.Question;
 import com.company.botadminpanel.repository.AnswerRepository;
+import com.company.botadminpanel.repository.BookRepository;
 import com.company.botadminpanel.repository.QuestionRepository;
 import com.company.botadminpanel.service.answer.AnswerService;
 import com.company.botadminpanel.service.book.BookService;
@@ -27,21 +26,23 @@ public class QuestionServiceImpl implements QuestionService {
     private final AnswerRepository answerRepository;
     public final BookService bookService;
     private final AnswerService answerService;
+    private final BookRepository bookRepository;
+    private final QuizMapper quizMapper;
 
     @Override
-    public ApiResult<List<Question>> list() {
-        return ApiResult.successResponse(questionRepository.findAll());
+    public ApiResult<List<QuestionDTO>> list() {
+        return ApiResult.successResponse(quizMapper.mapToQuestionDTOList(questionRepository.findAll()));
     }
 
     @Override
-    public ApiResult<Question> byId(Integer id) {
-        return ApiResult.successResponse(questionRepository.findById(id)
-                .orElseThrow(() -> RestException.restThrow("Bunday savol mavjud emas", HttpStatus.BAD_REQUEST)));
+    public ApiResult<QuestionDTO> byId(Integer id) {
+        return ApiResult.successResponse(quizMapper.mapToQuestionDTO(questionRepository.findById(id)
+                .orElseThrow(() -> RestException.restThrow("Bunday savol mavjud emas", HttpStatus.BAD_REQUEST))));
     }
 
     @Override
-    public ApiResult<Boolean> add(AddQuizDTO addQuizDTO) {
-        Book book = bookService.getById(addQuizDTO.getBookId()).getData();
+    public ApiResult<QuestionDTO> add(AddQuizDTO addQuizDTO) {
+        Book book = bookRepository.findById(addQuizDTO.getBookId()).orElseThrow();
 
         Question question = Question.builder().name(addQuizDTO.getName())
                 .book(book)
@@ -49,7 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .build();
         questionRepository.save(question);
 
-        List<AnswerDTO> dtos = addQuizDTO.getAnswerDTOList();
+        List<AnswerDTO> dtos = addQuizDTO.getAnswerList();
 
         List<Answer> answers = new ArrayList<>();
 
@@ -63,14 +64,17 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         answerRepository.saveAll(answers);
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(quizMapper.mapToQuestionDTO(question));
     }
 
     @Override
-    public ApiResult<Boolean> update(Integer id, AddQuizDTO addQuizDTO) {
+    public ApiResult<QuestionDTO> update(Integer id, AddQuizDTO addQuizDTO) {
+        Book book = bookRepository.findById(addQuizDTO.getBookId()).orElseThrow();
 
-        Book book = bookService.getById(addQuizDTO.getBookId()).getData();
-        Question question = byId(id).getData();
+//        Book book = bookService.getById(addQuizDTO.getBookId()).getData();
+//        Question question = byId(id).getData();
+        // me
+        Question question = questionRepository.findById(id).orElseThrow();
 
         question.setBook(book);
         question.setName(addQuizDTO.getName());
@@ -79,7 +83,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         List<Answer> answers = answerService.byQuizId(id).getData();
         for (Answer answer : answers) {
-            for (AnswerDTO answerDTO : addQuizDTO.getAnswerDTOList()) {
+            for (AnswerDTO answerDTO : addQuizDTO.getAnswerList()) {
                 answer.setCorrect(answerDTO.getCorrect());
                 answer.setName(answer.getName());
                 break;
@@ -87,12 +91,18 @@ public class QuestionServiceImpl implements QuestionService {
         }
         answerRepository.saveAll(answers);
 
-        return ApiResult.successResponse(true);
+        return ApiResult.successResponse(quizMapper.mapToQuestionDTO(question));
     }
 
     @Override
     public ApiResult<Boolean> delete(Integer id) {
         questionRepository.deleteById(id);
         return ApiResult.successResponse(true);
+    }
+
+    @Override
+    public ApiResult<List<QuestionDTO>> listByBookId(Integer id) {
+        List<Question> questions = questionRepository.findAllByBookId(id);
+        return ApiResult.successResponse(quizMapper.mapToQuestionDTOList(questions));
     }
 }
