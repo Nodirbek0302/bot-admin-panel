@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserDTO {
-    Integer id;
     String chatId;
     String firstName;
     String lastName;
